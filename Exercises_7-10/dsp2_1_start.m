@@ -1,0 +1,57 @@
+% Spectral analysis of periodic signals 
+% Exercise 7
+
+clear all
+close all
+
+% Parameter of the signal x(t)
+f0 = 1e3;                   % Frequency of the fundamental
+T0 = 1/f0;                  % Period of the signal
+
+% Representation of the periodic signal
+Ts = 1e-5;
+t = 0:Ts:3*T0-Ts;
+x_analog = 2 + 6*cos(2*pi*f0*t) + 4*sin(4*pi*f0*t) + 2*cos(6*pi*f0*t);
+
+figure(1), clf
+subplot(211)
+plot(t,x_analog), grid
+xlabel('t [s]')
+ylabel('x(t)')
+%pause
+
+
+% ********************************** SPECTRAL ANALYSIS ************************************
+% ***************************************************************************************
+
+% DFT Parameter
+T = T0;                         % Messdauer
+%Ts = 1/6*T0;                       % Abtastzeit
+N = T/Ts;                         % Anzahl der Abtastwerte
+fs = 1/Ts;                        % Abtastfrequenz
+df = 1/T;                        % Abstand zweier Frequenzpunkte nach der DFT
+
+
+% Creating the Sampling Signal
+
+n = 0:N-1;                  % Time index vector
+x = x_analog(1:T0/Ts);
+
+subplot(212)
+stem(n,x), grid
+xlabel('n')
+ylabel('x[n]')
+%pause
+
+% Spectral analysis
+c = fftshift(fft(x));
+f = (-N/2*df:df:(N/2-1)*df);
+subplot(211)
+stem(f,real(c)), grid
+axis([-max(abs(f)),max(abs(f)),-max(abs(c)),max(abs(c))])
+ylabel('real(c_k)')
+subplot(212)
+stem(f,imag(c)), grid
+axis([-max(abs(f)),max(abs(f)),-max(abs(c)),max(abs(c))])
+xlabel('f [Hz]')
+ylabel('imag(c_k)')
